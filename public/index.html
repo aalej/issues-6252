@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>Steps to reproduce</h2>
+    <ol>
+      <li>
+        Go to
+        <a href="http://localhost:4000/firestore/data" target="_blank"
+          >http://localhost:4000/firestore/data</a
+        >
+      </li>
+      <br />
+      <li>
+        <button id="clickMe">Click me</button> - get a doc from collection
+        "projects"
+      </li>
+      <br />
+      <li>
+        Check output at
+        <a href="http://localhost:4000/firestore/requests" target="_blank"
+          >http://localhost:4000/firestore/requests</a
+        >
+      </li>
+      <br />
+    </ol>
+    <h2>Output</h2>
+    <ol>
+      <li>
+        Emulator request tab shows 2 requests
+        <br />
+        <img src="./emulator_request.png" style="width: 800px; height: auto" />
+      </li>
+      <br />
+      <li>
+        The first request does not contain <code>resource</code>
+        <br />
+        <img
+          src="./emulator_request_get_err.png"
+          style="width: 800px; height: auto"
+        />
+      </li>
+      <br />
+      <li>
+        The second request contains <code>resource</code>
+        <br />
+        <img
+          src="./emulator_request_get_success.png"
+          style="width: 800px; height: auto"
+        />
+      </li>
+    </ol>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+      import {
+        doc,
+        getDoc,
+        getFirestore,
+        connectFirestoreEmulator,
+      } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+      const app = initializeApp({
+        apiKey: "demo-project-api-key",
+        authDomain: "demo-project.firebaseapp.com",
+        projectId: "demo-project",
+      });
+
+      const db = getFirestore();
+      connectFirestoreEmulator(db, "127.0.0.1", 8080);
+
+      function getProject(projectId) {
+        getDoc(doc(db, `projects/${projectId}`));
+      }
+
+      function initApp() {
+        const clickMe = document.getElementById("clickMe");
+        clickMe.onclick = () => {
+          getProject("some_id");
+        };
+      }
+
+      window.onload = function () {
+        initApp();
+      };
+    </script>
+  </body>
+</html>
